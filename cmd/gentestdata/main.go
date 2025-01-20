@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"io"
+	"math/rand"
 	"os"
 	"strconv"
 	"strings"
@@ -31,6 +32,6 @@ func gen(w io.Writer, n int) {
 	defer bw.Flush()
 
 	for i := 0; i < n; i++ {
-		fmt.Fprintf(bw, "%d\n", i)
+		fmt.Fprintf(bw, "%d\n", rand.Int())
 	}
 }

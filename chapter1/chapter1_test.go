@@ -2,6 +2,7 @@ package chapter1
 
 import (
 	"bufio"
+	"fmt"
 	"io"
 	"os"
 	"slices"
@@ -276,6 +277,152 @@ func Test_1_1_5(t *testing.T) {
 	got := buf.String()
 	want := `1
 2
+`
+	if got != want {
+		t.Errorf("got %v, want %v", got, want)
+	}
+}
+
+func solve_1_1_6(w io.Writer, r io.Reader) {
+	s := make([]string, 0)
+
+	scanner := bufio.NewScanner(r)
+	for scanner.Scan() {
+		s = append(s, scanner.Text())
+	}
+
+	slices.Sort(s)
+	for v := range slices.Values(s) {
+		w.Write([]byte(v + "\n"))
+	}
+}
+
+func Test_1_1_6(t *testing.T) {
+	filePath := "testdata/random_10.txt"
+	file, err := os.Open(filePath)
+	if err != nil {
+		t.Fatalf("failed to open file %s: %v", filePath, err)
+	}
+	defer file.Close()
+
+	var buf strings.Builder
+
+	solve_1_1_6(&buf, file)
+
+	got := buf.String()
+	want := `0
+0
+1
+2
+3
+4
+`
+	if got != want {
+		t.Errorf("got %v, want %v", got, want)
+	}
+}
+
+func solve_1_1_7(w io.Writer, r io.Reader) {
+	s := make([]string, 0)
+
+	scanner := bufio.NewScanner(r)
+	for scanner.Scan() {
+		s = append(s, scanner.Text())
+	}
+
+	m := make(map[string]int, len(s))
+	for v := range slices.Values(s) {
+		m[v]++
+	}
+
+	slices.Sort(s)
+	s = slices.Compact(s)
+
+	newS := make([]string, 0, len(m))
+	for v := range slices.Values(s) {
+		if cnt := m[v]; cnt == 1 {
+			newS = append(newS, v)
+		} else {
+			newS = append(newS, fmt.Sprintf("%d", cnt))
+		}
+	}
+
+	for v := range slices.Values(newS) {
+		w.Write([]byte(v + "\n"))
+	}
+}
+
+func Test_1_1_7(t *testing.T) {
+	filePath := "testdata/random_10.txt"
+	file, err := os.Open(filePath)
+	if err != nil {
+		t.Fatalf("failed to open file %s: %v", filePath, err)
+	}
+	defer file.Close()
+
+	var buf strings.Builder
+
+	solve_1_1_7(&buf, file)
+
+	got := buf.String()
+	want := `2
+1
+2
+3
+4
+`
+	if got != want {
+		t.Errorf("got %v, want %v", got, want)
+	}
+}
+
+func solve_1_1_8(w io.Writer, r io.Reader) {
+	evens := make([]string, 0)
+	odds := make([]string, 0)
+
+	scanner := bufio.NewScanner(r)
+
+	line := 0
+	for scanner.Scan() {
+		if line%2 == 0 {
+			evens = append(evens, scanner.Text())
+		} else {
+			odds = append(odds, scanner.Text())
+		}
+		line++
+	}
+
+	for v := range slices.Values(evens) {
+		w.Write([]byte(v + "\n"))
+	}
+	for v := range slices.Values(odds) {
+		w.Write([]byte(v + "\n"))
+	}
+}
+
+func Test_1_1_8(t *testing.T) {
+	filePath := "testdata/10.txt"
+	file, err := os.Open(filePath)
+	if err != nil {
+		t.Fatalf("failed to open file %s: %v", filePath, err)
+	}
+	defer file.Close()
+
+	var buf strings.Builder
+
+	solve_1_1_8(&buf, file)
+
+	got := buf.String()
+	want := `0
+2
+4
+6
+8
+1
+3
+5
+7
+9
 `
 	if got != want {
 		t.Errorf("got %v, want %v", got, want)
