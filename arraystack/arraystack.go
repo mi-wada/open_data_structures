@@ -10,7 +10,17 @@ func (as ArrayStack[T]) Len() int {
 	return len(as)
 }
 
-func (as *ArrayStack[T]) Insert(i int, x T) {
+func (as ArrayStack[T]) Get(i int) T {
+	return as[i]
+}
+
+func (as *ArrayStack[T]) Set(i int, x T) T {
+	removed := (*as)[i]
+	(*as)[i] = x
+	return removed
+}
+
+func (as *ArrayStack[T]) Add(i int, x T) {
 	*as = append((*as)[:i], append([]T{x}, (*as)[i:]...)...)
 }
 
@@ -21,7 +31,7 @@ func (as *ArrayStack[T]) Remove(i int) T {
 }
 
 func (as *ArrayStack[T]) Push(x T) {
-	as.Insert(as.Len(), x)
+	as.Add(as.Len(), x)
 }
 
 func (as *ArrayStack[T]) Pop() T {

@@ -18,9 +18,9 @@ func TestArrayStack(t *testing.T) {
 		t.Errorf("Push() failed")
 	}
 
-	as.Insert(1, 3)
+	as.Add(1, 3)
 	if as[0] != 1 || as[1] != 3 || as[2] != 2 {
-		t.Errorf("Insert() failed got: %v", as)
+		t.Errorf("Set() failed got: %v", as)
 	}
 
 	as.Remove(0)
