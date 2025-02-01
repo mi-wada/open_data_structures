@@ -8,24 +8,19 @@ import (
 
 func TestArrayQueue(t *testing.T) {
 	aq := arrayqueue.New[int]()
-	if aq.Len() != 0 {
-		t.Errorf("New() failed")
+	if got, want := aq.Size(), 0; got != want {
+		t.Errorf("aq.Size() = %v, want %v", got, want)
 	}
 
-	aq.Push(1)
-	if aq.Len() != 1 {
-		t.Errorf("Push() failed, got %v want %v", aq.Len(), 1)
+	aq.Add(0)
+	aq.Add(1)
+	if got, want := aq.Size(), 2; got != want {
+		t.Errorf("aq.Size() = %v, want %v", got, want)
 	}
-
-	aq.Push(2)
-	if aq.Len() != 2 {
-		t.Errorf("Push() failed")
+	if got, want := aq.Remove(), 0; got != want {
+		t.Errorf("aq.Remove() = %v, want %v", got, want)
 	}
-
-	if got, want := aq.Pop(), 1; got != want {
-		t.Errorf("Pop() failed, got %v, want %v", got, want)
-	}
-	if got, want := aq.Pop(), 2; got != want {
-		t.Errorf("Pop() failed, got %v, want %v", got, want)
+	if got, want := aq.Remove(), 1; got != want {
+		t.Errorf("aq.Remove() = %v, want %v", got, want)
 	}
 }

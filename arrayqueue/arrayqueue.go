@@ -1,43 +1,39 @@
 package arrayqueue
 
+import "github.com/mi-wada/open_data_structures/interfaces"
+
 type ArrayQueue[T any] struct {
 	s    []T
 	head int
-	len  int
+	size int
 }
 
 func New[T any]() ArrayQueue[T] {
-	return ArrayQueue[T]{s: make([]T, 1), head: 0, len: 0}
+	return ArrayQueue[T]{s: make([]T, 0), head: 0, size: 0}
 }
 
-func (aq ArrayQueue[T]) Len() int {
-	return aq.len
+func (aq ArrayQueue[T]) Size() int {
+	return aq.size
 }
 
-func (aq ArrayQueue[T]) tail() int {
-	return (aq.head + aq.len) % len(aq.s)
+var _ interfaces.Queue[struct{}] = &ArrayQueue[struct{}]{}
+
+func (aq *ArrayQueue[T]) Add(x T) {
+	aq.resize()
+	aq.s[(aq.head+aq.Size())%len(aq.s)] = x
+	aq.size++
 }
 
-func (aq *ArrayQueue[T]) Push(x T) {
-	aq.Resize()
-
-	aq.s[aq.tail()] = x
-	aq.len++
-}
-
-func (aq *ArrayQueue[T]) Pop() T {
-	x := aq.s[aq.head]
+func (aq *ArrayQueue[T]) Remove() T {
+	removed := aq.s[aq.head]
 	aq.head = (aq.head + 1) % len(aq.s)
-	aq.len--
-	return x
+	return removed
 }
 
-func (aq *ArrayQueue[T]) Resize() {
-	if aq.Len() < len(aq.s) {
-		return
+func (aq *ArrayQueue[T]) resize() {
+	if aq.Size() >= len(aq.s) || len(aq.s) > aq.Size()*3 {
+		aq.s = append(aq.s[aq.head:], aq.s[0:aq.head]...)
+		aq.s = append(aq.s, make([]T, aq.Size()+1)...)
+		aq.head = 0
 	}
-	aq.s = append(aq.s[aq.head:], aq.s[:aq.tail()]...)
-	aq.s = append(aq.s, make([]T, len(aq.s))...)
-
-	aq.head = 0
 }
