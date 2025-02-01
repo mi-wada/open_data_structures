@@ -8,33 +8,28 @@ import (
 
 func TestArrayStack(t *testing.T) {
 	as := arraystack.New[int]()
-	if as.Len() != 0 {
-		t.Errorf("New() failed")
+	if got, want := as.Size(), 0; got != want {
+		t.Errorf("ArrayStack.Size() = %v, want %v", got, want)
 	}
 
+	as.Add(0, 0)
+	if got, want := as.Size(), 1; got != want {
+		t.Errorf("ArrayStack.Size() = %v, want %v", got, want)
+	}
+	as.Add(1, 1)
+	if got, want := as.Remove(1), 1; got != want {
+		t.Errorf("ArrayStack.Remove() = %v, want %v", got, want)
+	}
+	if got, want := as.Remove(0), 0; got != want {
+		t.Errorf("ArrayStack.Remove() = %v, want %v", got, want)
+	}
+
+	as.Push(0)
 	as.Push(1)
-	as.Push(2)
-	if as.Len() != 2 {
-		t.Errorf("Push() failed")
+	if got, want := as.Pop(), 1; got != want {
+		t.Errorf("ArrayStack.Pop() = %v, want %v", got, want)
 	}
-
-	as.Add(1, 3)
-	if as[0] != 1 || as[1] != 3 || as[2] != 2 {
-		t.Errorf("Set() failed got: %v", as)
-	}
-
-	as.Remove(0)
-	if as[0] != 3 || as[1] != 2 {
-		t.Errorf("Remove() failed got: %v", as)
-	}
-
-	as.Pop()
-	if as[0] != 3 {
-		t.Errorf("Pop() failed got: %v", as)
-	}
-
-	as.Pop()
-	if as.Len() != 0 {
-		t.Errorf("Pop() failed got: %v", as)
+	if got, want := as.Pop(), 0; got != want {
+		t.Errorf("ArrayStack.Pop() = %v, want %v", got, want)
 	}
 }
